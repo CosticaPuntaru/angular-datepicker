@@ -134,8 +134,17 @@ Module.directive('dateTime', ['$compile', '$document', '$filter', 'dateTimeConfi
         });
       }
 
-      element.bind('focus', showPicker);
-      element.bind('blur', clear);
+        element.bind('click', function(e){
+            e.stopPropagation();
+            showPicker();
+        });
+        element.bind('blur', clear);
+        document.body.addEventListener('touchstart', function(){
+            clear();
+        })
+        scope.$on('$destroy', function() {
+            document.body.removeEventListener('touchstart');
+        })
     }
   };
 }]);
