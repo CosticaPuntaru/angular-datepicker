@@ -86,6 +86,7 @@ Module.directive('dateTime', ['$compile', '$document', '$filter', 'dateTimeConfi
       }
 
       scope.clear = function () {
+        element.blur();
         if (picker) {
           picker.remove();
           picker = null;
@@ -133,20 +134,8 @@ Module.directive('dateTime', ['$compile', '$document', '$filter', 'dateTimeConfi
           evt.preventDefault();
         });
       }
-        var showElement = false;
-        element.bind('click', function(e){
-            if(showElement){
-                showElement = false;
-                scope.clear();
-            } else {
-                showElement = true;
-                showPicker();
-            }
-        });
-        element.bind('blur', function(){
-          showElement = false;
-          scope.clear()
-        });
+        element.bind('focus', showPicker);
+        element.bind('blur', scope.clear);
     }
   };
 }]);
