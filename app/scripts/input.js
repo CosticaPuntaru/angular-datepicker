@@ -85,7 +85,7 @@ Module.directive('dateTime', ['$compile', '$document', '$filter', 'dateTimeConfi
         }
       }
 
-      function clear() {
+      scope.clear = function () {
         if (picker) {
           picker.remove();
           picker = null;
@@ -94,7 +94,7 @@ Module.directive('dateTime', ['$compile', '$document', '$filter', 'dateTimeConfi
           container.remove();
           container = null;
         }
-      }
+      };
 
       function showPicker() {
         if (picker) {
@@ -107,11 +107,11 @@ Module.directive('dateTime', ['$compile', '$document', '$filter', 'dateTimeConfi
         scope.$on('setDate', function (event, date, view) {
           updateInput(event);
           if (dismiss && views[views.length - 1] === view) {
-            clear();
+            scope.clear();
           }
         });
 
-        scope.$on('$destroy', clear);
+        scope.$on('$destroy', scope.clear);
 
         // move picker below input element
 
@@ -133,18 +133,20 @@ Module.directive('dateTime', ['$compile', '$document', '$filter', 'dateTimeConfi
           evt.preventDefault();
         });
       }
-
+        var showElement = false;
         element.bind('click', function(e){
-            e.stopPropagation();
-            showPicker();
+            if(showElement){
+                showElement = false;
+                scope.clear();
+            } else {
+                showElement = true;
+                showPicker();
+            }
         });
-        element.bind('blur', clear);
-        document.body.addEventListener('touchstart', function(){
-            clear();
-        })
-        scope.$on('$destroy', function() {
-            document.body.removeEventListener('touchstart');
-        })
+        element.bind('blur', function(){
+          showElement = false;
+          scope.clear()
+        });
     }
   };
 }]);
