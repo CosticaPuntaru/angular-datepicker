@@ -85,7 +85,8 @@ Module.directive('dateTime', ['$compile', '$document', '$filter', 'dateTimeConfi
         }
       }
 
-      function clear() {
+      scope.clear = function () {
+        element.blur();
         if (picker) {
           picker.remove();
           picker = null;
@@ -94,7 +95,7 @@ Module.directive('dateTime', ['$compile', '$document', '$filter', 'dateTimeConfi
           container.remove();
           container = null;
         }
-      }
+      };
 
       function showPicker() {
         if (picker) {
@@ -107,11 +108,11 @@ Module.directive('dateTime', ['$compile', '$document', '$filter', 'dateTimeConfi
         scope.$on('setDate', function (event, date, view) {
           updateInput(event);
           if (dismiss && views[views.length - 1] === view) {
-            clear();
+            scope.clear();
           }
         });
 
-        scope.$on('$destroy', clear);
+        scope.$on('$destroy', scope.clear);
 
         // move picker below input element
 
@@ -133,9 +134,8 @@ Module.directive('dateTime', ['$compile', '$document', '$filter', 'dateTimeConfi
           evt.preventDefault();
         });
       }
-
-      element.bind('focus', showPicker);
-      element.bind('blur', clear);
+        element.bind('focus', showPicker);
+        element.bind('blur', scope.clear);
     }
   };
 }]);
