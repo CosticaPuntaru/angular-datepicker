@@ -450,16 +450,9 @@ Module.directive('dateTime', ['$compile', '$document', '$filter', 'dateTimeConfi
         }
       }
 
-      function clear() {
-        if (picker) {
-          picker.remove();
-          picker = null;
-        }
-        if (container) {
-          container.remove();
-          container = null;
-        }
-      }
+      scope.clear = function () {
+        element.blur();
+      };
 
       function showPicker() {
         if (picker) {
@@ -472,11 +465,11 @@ Module.directive('dateTime', ['$compile', '$document', '$filter', 'dateTimeConfi
         scope.$on('setDate', function (event, date, view) {
           updateInput(event);
           if (dismiss && views[views.length - 1] === view) {
-            clear();
+            scope.clear();
           }
         });
 
-        scope.$on('$destroy', clear);
+        scope.$on('$destroy', scope.clear);
 
         // move picker below input element
 
@@ -498,9 +491,17 @@ Module.directive('dateTime', ['$compile', '$document', '$filter', 'dateTimeConfi
           evt.preventDefault();
         });
       }
-
-      element.bind('focus', showPicker);
-      element.bind('blur', clear);
+        element.bind('focus', showPicker);
+        element.bind('blur', function(){
+            if (picker) {
+                picker.remove();
+                picker = null;
+            }
+            if (container) {
+                container.remove();
+                container = null;
+            }
+        });
     }
   };
 }]);
@@ -508,6 +509,12 @@ Module.directive('dateTime', ['$compile', '$document', '$filter', 'dateTimeConfi
 angular.module("datePicker").run(["$templateCache", function($templateCache) {
 
   $templateCache.put("templates/datepicker.html",
+    "<button type=\"button\" class=\"close\" aria-label=\"Close\" ng-click=\"$parent.$parent.clear()\">\r" +
+    "\n" +
+    "  <span aria-hidden=\"true\">&times;</span>\r" +
+    "\n" +
+    "</button>\r" +
+    "\n" +
     "<div ng-switch=\"view\">\r" +
     "\n" +
     "  <div ng-switch-when=\"date\">\r" +
