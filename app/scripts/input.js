@@ -87,14 +87,6 @@ Module.directive('dateTime', ['$compile', '$document', '$filter', 'dateTimeConfi
 
       scope.clear = function () {
         element.blur();
-        if (picker) {
-          picker.remove();
-          picker = null;
-        }
-        if (container) {
-          container.remove();
-          container = null;
-        }
       };
 
       function showPicker() {
@@ -135,7 +127,16 @@ Module.directive('dateTime', ['$compile', '$document', '$filter', 'dateTimeConfi
         });
       }
         element.bind('focus', showPicker);
-        element.bind('blur', scope.clear);
+        element.bind('blur', function(){
+            if (picker) {
+                picker.remove();
+                picker = null;
+            }
+            if (container) {
+                container.remove();
+                container = null;
+            }
+        });
     }
   };
 }]);
