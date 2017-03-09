@@ -108,6 +108,10 @@
   background: none;
 }
 
+[date-picker] .template-container {
+  padding-top: 15px;
+}
+
 [date-picker] table {
   margin: 0;
 }
